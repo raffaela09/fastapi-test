@@ -9,3 +9,5 @@ pyjwt
 python-multipart
 email-validator
 python-dotenv
+pytest
+httpx
