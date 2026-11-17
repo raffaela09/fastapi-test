@@ -4,10 +4,9 @@ API REST desenvolvida com **FastAPI** para gerenciamento de livros, persistênci
 
 ---
 
-## 👥 Integrantes do Projeto
+## 👤 Autora do Projeto
 
-- Rafaela Virginio Franco 
-- Izabella Araújo
+- Rafaela Virginio Franco
 
 ---
 
@@ -21,6 +20,7 @@ API REST desenvolvida com **FastAPI** para gerenciamento de livros, persistênci
 - **[Passlib (bcrypt)](https://passlib.readthedocs.io/)**: Hashing seguro e verificação de senhas.
 - **[PyJWT](https://pyjwt.readthedocs.io/)**: Geração e validação de tokens JWT.
 - **[Uvicorn](https://www.uvicorn.org/)**: Servidor ASGI de alta performance.
+- **[Pytest](https://docs.pytest.org/)** & **[HTTPX](https://www.python-httpx.org/)** (`TestClient`): Execução de testes automatizados na API.
 
 ---
 
@@ -29,8 +29,8 @@ API REST desenvolvida com **FastAPI** para gerenciamento de livros, persistênci
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/raffaela09/fastapi_persistencia_dados.git
-cd projeto_rogerio
+git clone https://github.com/raffaela09/fastapi-test.git
+cd fastapi-test
 ```
 
 ### 2. Criar e ativar o ambiente virtual
@@ -171,6 +171,26 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c3VhcmlvQGV4ZW1wbG8uY29tIiwiZXh
 
 ---
 
+## ✅ Como Executar os Testes Automatizados (Pytest + TestClient)
+
+Os testes ficam em `test_main.py` e utilizam um banco **SQLite em memória** isolado (via `app.dependency_overrides[get_db]`), sem alterar o banco local `livraria.db`.
+
+Com o ambiente virtual ativado e as dependências instaladas, execute:
+
+```bash
+pytest -v
+```
+
+### Cenários Testados
+1. `test_read_root_returns_200`: Verifica se a rota pública `GET /` retorna status `200 OK`.
+2. `test_get_nonexistent_book_returns_404`: Verifica se buscar um livro inexistente (`GET /books/999`) retorna `404 Not Found`.
+3. `test_create_book_without_token_returns_401`: Verifica o bloqueio `401 Unauthorized` ao tentar cadastrar um livro sem token JWT.
+4. `test_read_users_me_without_token_returns_401`: Verifica o bloqueio `401 Unauthorized` ao acessar `/users/me` sem token JWT.
+5. `test_register_and_login_user`: Testa o cadastro de usuário (`201 Created`) e o login gerando token JWT (`200 OK`).
+6. `test_create_and_get_book_authenticated`: Testa a criação de livro com Bearer Token (`201 Created`) e a consulta posterior (`200 OK`).
+
+---
+
 ## 📁 Estrutura de Arquivos
 
 ```text
@@ -183,9 +203,10 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c3VhcmlvQGV4ZW1wbG8uY29tIiwiZXh
 ├── auth.py                   # Lógica de segurança, hash de senha e validação JWT
 ├── database.py               # Configuração do SQLAlchemy e sessão do SQLite
 ├── livraria.db               # Banco de dados local SQLite
-├── main.py                   # Endpoints da API FastAPI e injeção de dependências
+├── main.py                   # Endpoints da API FastAPI, documentação Swagger e dependências
 ├── models.py                 # Modelos ORM (BookModel e UserModel)
 ├── schemas.py                # Schemas de validação e serialização do Pydantic
+├── test_main.py              # Testes automatizados com Pytest e TestClient
 ├── requirements.txt          # Dependências do projeto
 ├── .env.example              # Modelo de variáveis de ambiente
 ├── .gitignore                # Arquivos ignorados pelo controle de versão
